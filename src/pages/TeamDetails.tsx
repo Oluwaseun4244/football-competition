@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import SquadCard from '../components/SquadCard';
 import SquadMemberModal from '../components/SquadMemberModal';
 import SquadMemberDetailsModal from '../components/SquadMemberDetailsModal';
-
+import { useNavigate } from 'react-router-dom';
 
 
 interface SquadMember {
@@ -40,6 +40,7 @@ const TeamDetails: React.FC = () => {
     console.log('Adding new squad member');
   };
 
+  const navigate = useNavigate();
   const handleCardClick = (member?: SquadMember, isCoach?: boolean) => {
     if (member) {
       setSelectedMember(member);
@@ -56,6 +57,14 @@ const TeamDetails: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">{teamName}</h1>
           <p className="text-lg text-gray-600">Squad Management</p>
+        </div>
+        <div className="flex justify-end items-center">
+          <button
+            onClick={() => navigate('/teams')}
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
+          >
+            Back to Teams
+          </button>
         </div>
 
         <div className="mb-12">

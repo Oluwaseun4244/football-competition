@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom';
 interface Team {
   teamName: string;
   coachName: string;
@@ -18,6 +18,7 @@ const dummyTeams: Team[] = [
 ];
 export default function LeagueTable() {
 
+  const navigate = useNavigate();
   const [teams, setTeams] = useState(dummyTeams);
 
   const sortedTeams = [...teams].sort((a, b) => {
@@ -30,10 +31,19 @@ export default function LeagueTable() {
     return (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst);
   });
 
-  
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl font-semibold text-gray-900 mb-4">League Table</h2>
+      <div className="flex justify-between items-center mb-8" >
+
+        <h2 className="text-2xl font-semibold text-gray-900">League Table</h2>
+        <button
+          onClick={() => navigate('/teams')}
+          className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Back to Teams
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

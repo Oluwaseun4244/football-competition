@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-
+import { usePostQuery } from '../utils/apiUtils';
+import Button from '../components/ui/Button';
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const auth = useContext(AuthContext);
@@ -13,10 +14,25 @@ const Login: React.FC = () => {
   });
   const [error, setError] = useState('');
 
+  const { mutate: login, isPending } = usePostQuery('auth/login', {
+    onSuccess: (data: any) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/teams');
+    },
+    onError: (error) => {
+      // console.log(error);
+      alert(error.response.data.message);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
+
+
     e.preventDefault();
     if (formData.email && formData.password) {
-      navigate('/teams');
+      login({ user_name: formData.email, password: formData.password });
+      //
       // auth?.login(formData.email, formData.password);
 
       // if (auth?.isAdmin) {
@@ -34,7 +50,7 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
         <div>
           <h2 className="text-center text-3xl font-bold text-gray-900">
-            Football Competition
+            Supreme Prima Liga
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to manage your team
@@ -83,12 +99,16 @@ const Login: React.FC = () => {
           </div>
 
           <div>
-            <button
+            <Button
+              text={'Sign in'}
+              bg="bg-blue-600"
+              disabled={isPending}
+              isLoading={isPending}
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Sign in
-            </button>
+              classNames="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            // onClick={handleSubmit}
+            />
+
           </div>
         </form>
 

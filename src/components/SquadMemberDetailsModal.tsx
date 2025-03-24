@@ -1,14 +1,9 @@
 import React from 'react';
-
+import { SquadMember } from '../types/Team';
 interface SquadMemberDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: {
-    name: string;
-    position: string;
-    imageUrl: string;
-    serialNumber?: number;
-  };
+  member: SquadMember;
   isCoach?: boolean;
 }
 
@@ -37,7 +32,7 @@ const SquadMemberDetailsModal: React.FC<SquadMemberDetailsModalProps> = ({
         
         <div className="aspect-square w-full mb-4">
           <img
-            src={member.imageUrl}
+            src={member.image_url}
             alt={member.name}
             className="w-full h-full object-cover rounded-lg"
           />
@@ -52,10 +47,10 @@ const SquadMemberDetailsModal: React.FC<SquadMemberDetailsModalProps> = ({
             <h3 className="text-lg font-semibold text-gray-900">Position</h3>
             <p className="text-gray-600">{member.position}</p>
           </div>
-          {!isCoach && member.serialNumber && (
+          {!isCoach && member.number && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900">Squad Number</h3>
-              <p className="text-gray-600">#{member.serialNumber}</p>
+              <p className="text-gray-600">#{member.number}</p>
             </div>
           )}
         </div>

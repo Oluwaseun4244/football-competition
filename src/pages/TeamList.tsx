@@ -2,44 +2,44 @@ import TeamCard from "../components/TeamCard";
 import TeamModal from "../components/TeamModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-interface Team {
-  teamName: string;
-  coachName: string;
+import { useGetQuery } from "../utils/apiUtils";
+import useProfile from "../hooks/useProfile";
+type squad_member = {
+  name: string;
+  position: string;
+  number: number;
   id: string;
-  points: number;
-  matchesPlayed: number;
-  goalsFor: number;
-  goalsAgainst: number;
+}
+interface Team {
+  id: string;
+  name: string;
+  slug: string;
+  coachName: string;
+  squad_members: squad_member[]
 }
 
-const dummyTeams: Team[] = [
-  { teamName: 'Arsenal', coachName: 'Mikel Arteta', id: "1", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Chelsea', coachName: 'Mauricio Pochettino', id: "2", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Liverpool', coachName: 'Jürgen Klopp', id: "3", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Manchester City', coachName: 'Pep Guardiola', id: "4", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Manchester United', coachName: 'Erik ten Hag', id: "5", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-];
+
 
 export default function TeamList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [teams, setTeams] = useState(dummyTeams);
   const navigate = useNavigate();
 
-  const handleCreateTeam = (teamData: { teamName: string; coachName: string }) => {
-    const newTeam: Team = {
-      ...teamData,
-      id: (teams.length + 1).toString(),
-      points: 0,
-      matchesPlayed: 0,
-      goalsFor: 0,
-      goalsAgainst: 0
-    };
-    const newTeams = [...teams, newTeam].sort((a, b) =>
-      a.teamName.localeCompare(b.teamName)
-    );
-    setTeams(newTeams);
-  };
+  const teamsQuery = useGetQuery<Team[]>(
+    {
+      url: `teams`,
+      queryKeys: [`teams`],
+    },
+    {
+      queryKey: [`teams`],
+      refetchOnWindowFocus: true,
+      retry: 2
+    }
+  );
+
+  const teams = teamsQuery.data || [];
+
+  const { userProfile } = useProfile();
+
 
 
   return (
@@ -51,27 +51,29 @@ export default function TeamList() {
 
 
         <div className="flex justify-between items-center">
-
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
-          >
-            Create Team
-          </button>
+          {
+            userProfile?.type === 'admin' ?
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
+              >
+                Create Team
+              </button> : <></>
+          }
           <button
             onClick={() => navigate('/league-table')}
             className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
           >
             View League Table
-          </button> 
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {teams.map((team, index) => (
             <TeamCard
               key={index}
-              teamName={team.teamName}
-              coachName={team.coachName}
+              teamName={team.name}
+              coachName={team.squad_members?.find(member => member.position === 'coach')?.name || ''}
               id={team.id}
             />
           ))}
@@ -80,7 +82,6 @@ export default function TeamList() {
         <TeamModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
-          onSubmit={handleCreateTeam}
         />
       </div>
     </div>

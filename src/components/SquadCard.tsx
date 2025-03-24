@@ -1,21 +1,28 @@
 import React from 'react';
+import { SquadMember } from '../types/Team';
 
 interface SquadCardProps {
-  name?: string;
-  serialNumber?: number;
-  imageUrl?: string;
-  isCoach?: boolean;
-  onClick: () => void;
+  name: string;
+  image_url: string;
+  is_coach: boolean;
+  onClick?: () => void;
+  position?: string;
+  id?: number;
+  team_id?: string;
+  competition_id?: string;
+  role_name?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 const SquadCard: React.FC<SquadCardProps> = ({ 
   name, 
-  serialNumber, 
-  imageUrl, 
-  isCoach = false,
+  is_coach, 
+  image_url, 
   onClick,
+  position
 }) => {
-  const isAddCard = !name || !imageUrl;
+  const isAddCard = !name && !image_url;
 
   return (
     <div 
@@ -41,7 +48,7 @@ const SquadCard: React.FC<SquadCardProps> = ({
           </div>
         ) : (
           <img 
-            src={imageUrl} 
+            src={image_url} 
             alt={name} 
             className="w-full h-full object-cover rounded-lg"
           />
@@ -50,8 +57,8 @@ const SquadCard: React.FC<SquadCardProps> = ({
       {!isAddCard && (
         <>
           <h3 className="font-semibold text-gray-900">{name}</h3>
-          <p className="text-sm text-gray-600">
-            {isCoach ? 'Coach' : `#${serialNumber}`}
+          <p className="text-sm text-gray-600 capitalize">
+            {is_coach ? 'Coach' : `#${position}`}
           </p>
         </>
       )}

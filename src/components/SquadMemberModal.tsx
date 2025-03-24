@@ -1,29 +1,43 @@
 import React, { useState } from 'react';
-
+import { usePostQuery } from '../utils/apiUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import Button from './ui/Button';
 interface SquadMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (memberData: { name: string; position: string; imageUrl: string }) => void;
   isCoach?: boolean;
+  teamId: string;
 }
 
-const SquadMemberModal: React.FC<SquadMemberModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onSubmit,
-  isCoach = false 
+const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
+  isOpen,
+  onClose,
+  isCoach = false,
+  teamId
 }) => {
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = usePostQuery('create-squad-member', {
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: [`team-${teamId}`] });
+      setName('');
+      setPosition('');
+      setImageUrl('');
+      onClose();
+    },
+    onError: (error) => {
+      console.log(error);
+      alert(error.response.data.message);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ name, position, imageUrl });
-    setName('');
-    setPosition('');
-    setImageUrl('');
-    onClose();
+    mutate({ name, position: position, image_url: imageUrl, team_id: teamId, role_name: isCoach ? 'coach' : 'player' });
+
   };
 
   if (!isOpen) return null;
@@ -52,14 +66,26 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
             <label htmlFor="position" className="block text-sm font-medium text-gray-700 mb-1">
               Position
             </label>
-            <input
-              type="text"
+            <select
               id="position"
               value={position}
               onChange={(e) => setPosition(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-            />
+            >
+              <option value="" disabled>Select Position</option>
+              {
+                isCoach ? (
+                  <option value="coach">Coach</option>
+                ) : (
+                  <>
+                    <option value="defender">Defender</option>
+                    <option value="midfield">Midfielder</option>
+                    <option value="attacker">Attacker</option>
+                  </>
+                )
+              }
+            </select>
           </div>
           <div className="mb-4">
             <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">
@@ -71,7 +97,7 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+            // required
             />
           </div>
           <div className="flex justify-end space-x-3">
@@ -82,12 +108,16 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
             >
               Cancel
             </button>
-            <button
+
+            <Button
+              text="Add Member"
+              isLoading={isPending}
+              disabled={isPending}
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Add Member
-            </button>
+              bg="bg-blue-600"
+              classNames="w-[120px] h-[40px] px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
           </div>
         </form>
       </div>

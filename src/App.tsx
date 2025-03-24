@@ -5,17 +5,22 @@ import Login from './pages/Login';
 import './App.css';
 import TeamList from './pages/TeamList';
 import LeagueTable from './pages/LeagueTable';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/teams" element={<TeamList />} />
-        <Route path="/league-table" element={<LeagueTable />} />
-        <Route path="/team/:teamName" element={<TeamDetails />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/teams" element={<TeamList />} />
+          <Route path="/league-table" element={<LeagueTable />} />
+          <Route path="/team/:id" element={<TeamDetails />} />
+        </Routes>
+      </Router>
+    </QueryClientProvider>
   );
 }
 

@@ -37,6 +37,10 @@ const SquadMemberDetailsModal: React.FC<SquadMemberDetailsModalProps> = ({
       alert(error.response.data.message);
     },
   });
+  const allowOnlyImage = (file: File) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    return allowedTypes.includes(file.type);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +48,10 @@ const SquadMemberDetailsModal: React.FC<SquadMemberDetailsModalProps> = ({
     formData.append('name', editedMember.name);
     formData.append('position', editedMember.position);
     if (file) {
+      if (!allowOnlyImage(file)) {
+        alert('Please upload a valid image');
+        return;
+      }
       formData.append('image', file);
     }
     mutate(formData);

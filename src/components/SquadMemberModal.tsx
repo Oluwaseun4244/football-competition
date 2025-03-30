@@ -34,9 +34,21 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
     },
   });
 
+  const allowOnlyImage = (file: File) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    return allowedTypes.includes(file.type);
+  }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return;
+    if (!file) {
+      alert('Please upload an image');
+      return;
+    };
+
+    if (!allowOnlyImage(file)) {
+      alert('Please upload a valid image');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('name', name);

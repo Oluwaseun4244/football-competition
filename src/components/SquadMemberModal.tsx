@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { usePostQuery } from '../utils/apiUtils';
+import { usePostQueryWithFile } from '../utils/apiUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from './ui/Button';
 interface SquadMemberModalProps {
@@ -17,15 +17,15 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = usePostQuery('create-squad-member', {
+  const { mutate, isPending } = usePostQueryWithFile('create-squad-member', {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: [`team-${teamId}`] });
       setName('');
       setPosition('');
-      setImageUrl('');
+      setFile(null);
       onClose();
     },
     onError: (error) => {
@@ -36,8 +36,16 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ name, position: position, image_url: imageUrl, team_id: teamId, role_name: isCoach ? 'coach' : 'player' });
+    if (!file) return;
 
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('position', position);
+    formData.append('team_id', teamId);
+    formData.append('role_name', isCoach ? 'coach' : 'player');
+    formData.append('image', file);
+
+    mutate(formData);
   };
 
   if (!isOpen) return null;
@@ -92,12 +100,14 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
               Image URL
             </label>
             <input
-              type="url"
+              type="file"
               id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setFile(file);
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            // required
+              required
             />
           </div>
           <div className="flex justify-end space-x-3">

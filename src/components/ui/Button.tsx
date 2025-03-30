@@ -33,9 +33,9 @@ const Button: React.FC<ButtonProps> = ({
       className={`rounded-lg font-satoshi p-0 flex items-center justify-center ${disabled ? "cursor-default" : "cursor-pointer"
         } ${classNames} ${bg} my-${my}`}
     >
-      {icon && iconPosition == 'left' ? <span className="mr-2">{icon}</span> : <></>}
+      {icon && iconPosition === 'left' ? <span className="mr-2">{icon}</span> : <></>}
       {text}
-      {icon && iconPosition == 'right' ? <span className="mr-2">{icon}</span> : <></>}
+      {icon && iconPosition === 'right' ? <span className="mr-2">{icon}</span> : <></>}
     </button>
   ) : (
     <button

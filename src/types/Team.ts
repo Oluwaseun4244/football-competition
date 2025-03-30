@@ -26,4 +26,17 @@ export interface Team {
   squad_members: SquadMember[];
   coaches: Coach[];
   players: SquadMember[];
-} 
+  coach_admin: UserProfile;
+  submission_status: '' | 'approved' | 'rejected' | 'requested' | 'opened';
+}
+
+export type UserProfile = {
+  id: number;
+  full_name: string;
+  email: string;
+  type: string;
+  user_name: number;
+  plain_password: string;
+}
+
+

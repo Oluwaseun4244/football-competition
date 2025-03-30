@@ -18,7 +18,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose }) => {
 
   const { mutate, isPending } = usePostQuery('create-team', {
     onSuccess: (data: any) => {
-      console.log("data", data)
+      // console.log("data", data)
       setTeamName('');
       setCoachName('');
       queryClient.invalidateQueries({ queryKey: ['teams'] });
@@ -33,6 +33,14 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (teamName.trim() === '' || coachName.trim() === '') {
+      alert('Team name and coach name are required');
+      return;
+    }
+    if (teamName.trim().length < 3 || coachName.trim().length < 3) {
+      alert('Team name and coach name must be at least 3 characters');
+      return;
+    }
     mutate({ name: teamName, full_name: coachName });
 
   };

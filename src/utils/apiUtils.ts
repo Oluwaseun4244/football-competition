@@ -100,6 +100,29 @@ export const postData = async <T>(url: string, payload: unknown): Promise<T> => 
     }
   })
 };
+
+export const postDataWithFile = async <T>(url: string, payload: unknown): Promise<T> => {
+
+  return new Promise(async (resolve, reject) => {
+
+
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'multipart/form-data' }
+      };
+
+      const response: AxiosResponse<T> = await axios.post(`${BASE_URL}/${url}`, payload, config);
+
+      if (response.status === 200 || response.status === 201) {
+        resolve(response.data)
+      }
+      reject(response.statusText)
+    } catch (error: any) {
+
+      reject(error)
+    }
+  })
+};
 export const putData = async <T>(url: string, payload: unknown): Promise<T> => {
 
 
@@ -143,6 +166,19 @@ export const usePostQuery = <ResponseType, MutationVariables>(
 
   return useMutation<ResponseType, ApiErrorResponse, MutationVariables>({
     mutationFn: (payload: MutationVariables) => postData<ResponseType>(url, payload),
+    mutationKey: mutationKeys,
+    ...options,
+  });
+};
+
+export const usePostQueryWithFile = <ResponseType, MutationVariables>(
+  url: string,
+  options?: UseMutationOptions<ResponseType, ApiErrorResponse, MutationVariables>,
+  mutationKeys?: string[]
+) => {
+
+  return useMutation<ResponseType, ApiErrorResponse, MutationVariables>({
+    mutationFn: (payload: MutationVariables) => postDataWithFile<ResponseType>(url, payload),
     mutationKey: mutationKeys,
     ...options,
   });

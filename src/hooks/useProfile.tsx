@@ -1,24 +1,34 @@
 import { useGetQuery } from '../utils/apiUtils';
 
+type UserProfile = {
+  id: number;
+  full_name: string;
+  email: string;
+  type: string;
+  user_name: number;
+  team_id: string;
+}
 export default function useProfile() {
 
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // const token = localStorage.getItem('token');
 
 
-  const userProfileQuery = useGetQuery<any>(
+  const userProfileQuery = useGetQuery<UserProfile>(
     {
-      url: `profile/${user?.id}`,
-      queryKeys: [`user-profile-${user?.id}`],
+      url: `profile`,
+      queryKeys: [`user-profile`],
     },
     {
-      queryKey: [`user-profile-${user?.id}`],
+      queryKey: [`user-profile`],
       refetchOnWindowFocus: false,
       retry: 2
     }
   );
 
   const userProfile = userProfileQuery.data;
+
+  
 
   return {
     userProfileQuery,

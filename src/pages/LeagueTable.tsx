@@ -21,6 +21,8 @@ export default function LeagueTable() {
   const navigate = useNavigate();
   const [teams, setTeams] = useState(dummyTeams);
 
+  
+
   const sortedTeams = [...teams].sort((a, b) => {
     if (a.points === 0 && b.points === 0) {
       return a.teamName.localeCompare(b.teamName);

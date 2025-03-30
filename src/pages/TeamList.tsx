@@ -40,29 +40,50 @@ export default function TeamList() {
 
   const { userProfile } = useProfile();
 
-
+  const hadleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex gap-4 items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Football Competition</h1>
+          <button
+            onClick={hadleLogout}
+            className="bg-blue-600 h-[30px] text-white px-6  rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4 lg:mb-0"
+          >
+            Logout
+          </button>
         </div>
 
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col lg:flex-row justify-between mb-8">
           {
-            userProfile?.type === 'admin' ?
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
-              >
-                Create Team
-              </button> : <></>
+            userProfile?.type === 'admin' &&
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-blue-600 text-white  px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4 lg:mb-0"
+            >
+              Create Team
+            </button>
+
+          }
+          {
+            userProfile?.type === 'admin' &&
+            <button
+              onClick={() => navigate('/manage-teams')}
+              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4 lg:mb-0"
+            >
+              Manage Teams
+            </button>
+
+
           }
           <button
             onClick={() => navigate('/league-table')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-8"
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mb-4 lg:mb-0"
           >
             View League Table
           </button>

@@ -1,24 +1,24 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+// import { AuthContext } from '../context/AuthContext';
 import { usePostQuery } from '../utils/apiUtils';
 import Button from '../components/ui/Button';
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const auth = useContext(AuthContext);
+  // const auth = useContext(AuthContext);
 
 
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: 'guest@gmail.com',
+    password: '12345678',
   });
+  const [viewPassword, setViewPassword] = useState(false);
   const [error, setError] = useState('');
 
   const { mutate: login, isPending } = usePostQuery('auth/login', {
     onSuccess: (data: any) => {
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/teams');
+      window.location.reload();
     },
     onError: (error) => {
       // console.log(error);
@@ -32,18 +32,18 @@ const Login: React.FC = () => {
     e.preventDefault();
     if (formData.email && formData.password) {
       login({ user_name: formData.email, password: formData.password });
-      //
-      // auth?.login(formData.email, formData.password);
 
-      // if (auth?.isAdmin) {
-      //   navigate('/');
-      // } else {
-      //   navigate(`/team/${encodeURIComponent(auth?.teamName || '')}`);
-      // }
     } else {
       setError('Please fill in all fields');
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/teams');
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -72,7 +72,7 @@ const Login: React.FC = () => {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 autoComplete="email"
                 required
                 value={formData.email}
@@ -81,26 +81,35 @@ const Login: React.FC = () => {
               />
             </div>
 
-            <div>
+            <div className='relative'>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={viewPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
+              {
+                viewPassword ?
+                  <button type='button' className='absolute right-0 top-2 h-full px-3 py-2 text-gray-500 hover:text-gray-700' onClick={() => setViewPassword(!viewPassword)}> hide </button>
+                  :
+                  <button type='button' className='absolute right-0 top-2 h-full px-3 py-2 text-gray-500 hover:text-gray-700' onClick={() => setViewPassword(!viewPassword)}> show</button>
+              }
+
+
             </div>
+
           </div>
 
           <div>
             <Button
-              text={'Sign in'}
+              text={formData.email === 'guest@gmail.com' ? 'Enter as Guest' : 'Sign in'}
               bg="bg-blue-600"
               disabled={isPending}
               isLoading={isPending}
@@ -112,11 +121,7 @@ const Login: React.FC = () => {
           </div>
         </form>
 
-        <div className="text-sm text-center text-gray-600">
-          <p>Demo credentials:</p>
-          <p>Admin: admin@example.com / any password</p>
-          <p>Team: team@example.com / any password</p>
-        </div>
+
       </div>
     </div>
   );

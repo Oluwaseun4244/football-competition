@@ -1,5 +1,4 @@
 import React from 'react';
-import { SquadMember } from '../types/Team';
 
 interface SquadCardProps {
   name: string;

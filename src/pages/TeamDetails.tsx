@@ -16,9 +16,8 @@ const TeamDetails: React.FC = () => {
     queryKeys: [`team-${id}`],
   });
 
-  const { userProfileQuery } = useProfile();
+  const { userProfile } = useProfile();
 
-  console.log(userProfileQuery.data);
   const players = team?.players || [];
   const coaches = team?.coaches || [];
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -28,13 +27,25 @@ const TeamDetails: React.FC = () => {
 
 
   const navigate = useNavigate();
-  const handleCardClick = (member?: SquadMember, isCoach?: boolean) => {
-    if (member) {
-      setSelectedMember(member);
-      setIsDetailsModalOpen(true);
+  const handleCardClick = (member?: SquadMember, isCoach?: boolean, action?: 'view' | 'add') => {
+    const isAdmin = userProfile?.type === 'admin';
+
+    const isTeamAdmin = userProfile?.type === 'team_admin';
+
+    const isMyTeam = userProfile?.team_id === id;
+    const iHaveAccess = isMyTeam && isTeamAdmin;
+
+    if (iHaveAccess || isAdmin || action === 'view') {
+
+      if (member) {
+        setSelectedMember(member);
+        setIsDetailsModalOpen(true);
+      } else {
+        setIsAddingCoach(isCoach || false);
+        setIsAddModalOpen(true);
+      }
     } else {
-      setIsAddingCoach(isCoach || false);
-      setIsAddModalOpen(true);
+      alert('You are not authorized to add or edit squad members');
     }
   };
 
@@ -64,7 +75,7 @@ const TeamDetails: React.FC = () => {
                   name={coach.name}
                   image_url={coach.image_url}
                   is_coach={true}
-                  onClick={() => handleCardClick(coach, true)}
+                  onClick={() => handleCardClick(coach, true, 'view')}
                 />
               ))
             }
@@ -74,7 +85,7 @@ const TeamDetails: React.FC = () => {
                   name=""
                   image_url=""
                   is_coach={true}
-                  onClick={() => handleCardClick(undefined, true)}
+                  onClick={() => handleCardClick(undefined, true, 'add')}
                 />
               )
             }
@@ -84,12 +95,12 @@ const TeamDetails: React.FC = () => {
         <div>
           <h2 className="text-2xl font-semibold text-gray-900 mb-6">Squad</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {team?.players?.map((member, index) => (
+            {team?.players?.map((member) => (
               <SquadCard
                 key={member.id}
                 {...member}
                 is_coach={member.position === 'coach'}
-                onClick={() => handleCardClick(member)}
+                onClick={() => handleCardClick(member, false, 'view')}
               />
             ))}
             {
@@ -98,7 +109,7 @@ const TeamDetails: React.FC = () => {
                   name=""
                   is_coach={false}
                   image_url=""
-                  onClick={() => handleCardClick()}
+                  onClick={() => handleCardClick(undefined, false, 'add')}
                 />
               )
             }
@@ -118,12 +129,13 @@ const TeamDetails: React.FC = () => {
         {selectedMember && (
           <SquadMemberDetailsModal
             isOpen={isDetailsModalOpen}
+            teamId={id || ''}
             onClose={() => {
               setIsDetailsModalOpen(false);
               setSelectedMember(null);
             }}
             member={selectedMember}
-            isCoach={!selectedMember.number}
+            isCoach={selectedMember.role_name === 'coach'}
           />
         )}
       </div>

@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 // import { AuthContext } from '../context/AuthContext';
 import { usePostQuery } from '../utils/apiUtils';
 import Button from '../components/ui/Button';
+import logo from '../images/prima-logo.jpeg';
+
 const Login: React.FC = () => {
   const navigate = useNavigate();
   // const auth = useContext(AuthContext);
@@ -48,6 +50,9 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div className='flex items-center justify-center'>
+          <img src={logo} alt="logo" className='w-12 h-12' />
+        </div>
         <div>
           <h2 className="text-center text-3xl font-bold text-gray-900">
             Supreme Prima Liga

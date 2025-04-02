@@ -35,7 +35,7 @@ export type UserProfile = {
   full_name: string;
   email: string;
   type: string;
-  user_name: number;
+  user_name: string;
   plain_password: string;
 }
 

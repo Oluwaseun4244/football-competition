@@ -26,9 +26,9 @@ export default function ManagTeams() {
 
   const teams = teamsQuery.data || [];
 
-  const handleCopyPassword = (password: string) => {
-    navigator.clipboard.writeText(password);
-    alert('Password copied to clipboard');
+  const handleCopyPassword = (password: string, user_name: string) => {
+    navigator.clipboard.writeText(`username: ${user_name} \npassword: ${password}`);
+    alert('Login details copied to clipboard');
   }
 
   const { mutate: confirmTeam, isPending } = usePostQuery('teams/confirm', {
@@ -120,10 +120,10 @@ export default function ManagTeams() {
                   <td className={`px-6 py-4 whitespace-nowrap text-sm capitalize ${team.submission_status === 'approved' ? 'text-green-600' : 'text-red-600'}`}>{team.submission_status || '--'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm  text-gray-500">
                     <button
-                      onClick={() => handleCopyPassword(team.coach_admin.plain_password)}
+                      onClick={() => handleCopyPassword(team.coach_admin.plain_password, team.coach_admin.user_name)}
                       className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
-                      Copy Password
+                      Copy Login Details
                     </button>
                   </td>
 

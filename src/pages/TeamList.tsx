@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetQuery } from "../utils/apiUtils";
 import useProfile from "../hooks/useProfile";
+import Loader from "../components/ui/Loader";
+
 type squad_member = {
   name: string;
   position: string;
@@ -90,7 +92,7 @@ export default function TeamList() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {teams.map((team, index) => (
+          {teamsQuery.isLoading ? <Loader text="Loading teams..." /> : teams.map((team, index) => (
             <TeamCard
               key={index}
               teamName={team.name}

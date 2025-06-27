@@ -5,6 +5,7 @@ import FixtureCard from '../components/FixtureCard';
 import CreateFixtureModal from '../components/CreateFixtureModal';
 import Button from '../components/ui/Button';
 import useProfile from '../hooks/useProfile';
+import { useNavigate } from 'react-router-dom';
 
 type TabType = 'unplayed' | 'all' | 'played';
 
@@ -13,6 +14,7 @@ export default function Fixtures() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { userProfile } = useProfile();
   const [editFixture, setEditFixture] = useState<Fixture | null>(null);
+  const navigate = useNavigate();
 
   // You'll need to replace 'competition-id' with the actual competition ID
   const competitionId = '1'; // This should come from your app context or props
@@ -57,9 +59,6 @@ export default function Fixtures() {
     setEditFixture(fixture);
   };
 
-
-
-
   if (pendingFixturesError || completedFixturesError || allFixturesError) {
     return (
       <div className="min-h-screen bg-gray-50 p-6">
@@ -88,6 +87,12 @@ export default function Fixtures() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md shadow-sm"
+      >
+        ← Back
+      </button>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">

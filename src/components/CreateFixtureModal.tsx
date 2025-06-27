@@ -36,6 +36,7 @@ const CreateFixtureModal: React.FC<CreateFixtureModalProps> = ({
     home_team_goals: '',
     away_team_goals: '',
   });
+  const [markAsFinal, setMarkAsFinal] = useState(false);
 
   useEffect(() => {
     if (isEdit && initialData) {
@@ -48,6 +49,7 @@ const CreateFixtureModal: React.FC<CreateFixtureModalProps> = ({
         home_team_goals: typeof initialData.home_team_goals !== 'undefined' ? initialData.home_team_goals : '',
         away_team_goals: typeof initialData.away_team_goals !== 'undefined' ? initialData.away_team_goals : '',
       });
+      setMarkAsFinal(false);
     } else {
       setFormData({
         home_team_id: 0,
@@ -58,6 +60,7 @@ const CreateFixtureModal: React.FC<CreateFixtureModalProps> = ({
         home_team_goals: '',
         away_team_goals: '',
       });
+      setMarkAsFinal(false);
     }
   }, [isEdit, initialData, competitionId, isOpen]);
 
@@ -122,11 +125,10 @@ const CreateFixtureModal: React.FC<CreateFixtureModalProps> = ({
   const handleConfirmUpdate = (data?: any) => {
     if (!initialData && !data) return;
     const payload = { ...(data || initialData) };
-    if (
-      typeof payload.home_team_goals !== 'undefined' &&
-      typeof payload.away_team_goals !== 'undefined'
-    ) {
+    if (markAsFinal) {
       payload.status = 'completed';
+    }else{
+      payload.status = "pending"
     }
     updateFixtureMutate(payload);
   };
@@ -247,6 +249,20 @@ const CreateFixtureModal: React.FC<CreateFixtureModalProps> = ({
           </div>
 
           {isEdit && (
+            <div className="mb-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  checked={markAsFinal}
+                  onChange={e => setMarkAsFinal(e.target.checked)}
+                  className="form-checkbox h-4 w-4 text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Mark as final result</span>
+              </label>
+            </div>
+          )}
+
+          {markAsFinal && (
             <div className="flex gap-4">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Home Score</label>

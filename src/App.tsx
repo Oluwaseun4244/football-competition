@@ -7,6 +7,7 @@ import TeamList from './pages/TeamList';
 import LeagueTable from './pages/LeagueTable';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ManagTeams from './pages/ManagTeams';
+import Fixtures from './pages/Fixtures';
 const queryClient = new QueryClient();
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/manage-teams" element={<ManagTeams />} />
           <Route path="/league-table" element={<LeagueTable />} />
           <Route path="/team/:id" element={<TeamDetails />} />
+          <Route path="/fixtures" element={<Fixtures />} />
         </Routes>
       </Router>
     </QueryClientProvider>

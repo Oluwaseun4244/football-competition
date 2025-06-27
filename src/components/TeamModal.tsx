@@ -41,7 +41,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose }) => {
       alert('Team name and coach name must be at least 3 characters');
       return;
     }
-    mutate({ name: teamName, full_name: coachName });
+    mutate({ name: teamName, full_name: coachName, logo: "" });
 
   };
 

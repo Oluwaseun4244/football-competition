@@ -1,37 +1,34 @@
-import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useGetQuery } from '../utils/apiUtils';
 interface Team {
-  teamName: string;
-  coachName: string;
   id: string;
+  name: string;
+  matches_played: number;
   points: number;
-  matchesPlayed: number;
-  goalsFor: number;
-  goalsAgainst: number;
+  goals_for: number;
+  goals_against: number;
+  goals_difference: number;
 }
-const dummyTeams: Team[] = [
-  { teamName: 'Arsenal', coachName: 'Mikel Arteta', id: "1", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Chelsea', coachName: 'Mauricio Pochettino', id: "2", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Liverpool', coachName: 'Jürgen Klopp', id: "3", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Manchester City', coachName: 'Pep Guardiola', id: "4", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-  { teamName: 'Manchester United', coachName: 'Erik ten Hag', id: "5", points: 0, matchesPlayed: 0, goalsFor: 0, goalsAgainst: 0 },
-];
+
 export default function LeagueTable() {
 
+
+  const tableQuery = useGetQuery<Team[]>(
+    {
+      url: `table`,
+      queryKeys: [`table`],
+    },
+    {
+      queryKey: [`table`],
+      refetchOnWindowFocus: true,
+      retry: 2
+    }
+  );
+
+
   const navigate = useNavigate();
-  const [teams, setTeams] = useState(dummyTeams);
 
-  
-
-  const sortedTeams = [...teams].sort((a, b) => {
-    if (a.points === 0 && b.points === 0) {
-      return a.teamName.localeCompare(b.teamName);
-    }
-    if (a.points !== b.points) {
-      return b.points - a.points;
-    }
-    return (b.goalsFor - b.goalsAgainst) - (a.goalsFor - a.goalsAgainst);
-  });
+  const teams = tableQuery.data || [];
 
 
   return (
@@ -60,14 +57,14 @@ export default function LeagueTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {sortedTeams.map((team, index) => (
+            {teams.map((team, index) => (
               <tr key={team.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{team.teamName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.matchesPlayed}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goalsFor}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goalsAgainst}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goalsFor - team.goalsAgainst}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{team.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.matches_played}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_for}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_against}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_difference}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold text-gray-900">{team.points}</td>
               </tr>
             ))}

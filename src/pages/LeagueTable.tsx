@@ -11,6 +11,7 @@ interface TableShema {
   num_of_wins: number;
   num_of_losses: number;
   num_of_draws: number;
+  logo: string;
 }
 
 export default function LeagueTable() {
@@ -57,40 +58,42 @@ export default function LeagueTable() {
           </div>
         </div>
       ) : (
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MP</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">L</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GF</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GA</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GD</th>
-              <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {teams.map((team, index) => (
-              <tr key={team.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">{team.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.matches_played}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_wins}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_draws}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_losses}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_for}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_against}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_difference}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold text-gray-900">{team.points}</td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MP</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">L</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GF</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GA</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GD</th>
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {teams.map((team, index) => (
+                <tr key={team.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize"> <div className="flex items-center gap-2">
+                    <img src={team.logo} alt={team.name} className="w-6 h-6" />
+                    {team.name}</div></td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.matches_played}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_wins}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_draws}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.num_of_losses}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_for}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_against}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{team.goals_difference}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold text-gray-900">{team.points}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

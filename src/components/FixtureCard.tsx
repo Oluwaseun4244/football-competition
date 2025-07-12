@@ -78,11 +78,17 @@ const FixtureCard: React.FC<FixtureCardProps> = ({ fixture, onClick, onEdit, isA
         {/* Home Team */}
         <div className="flex items-center space-x-3 flex-1">
           <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-
-            <span className="text-gray-500 text-xs font-medium">
-              {(fixture.home_team.name ? fixture.home_team.name.substring(0, 2).toUpperCase() : '??')}
-            </span>
-
+            {fixture.home_team.logo ? (
+              <img 
+                src={fixture.home_team.logo} 
+                alt={fixture.home_team.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-500 text-xs font-medium">
+                {(fixture.home_team.name ? fixture.home_team.name.substring(0, 2).toUpperCase() : '??')}
+              </span>
+            )}
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-gray-900 text-sm">{fixture.home_team.name}</h3>
@@ -108,11 +114,17 @@ const FixtureCard: React.FC<FixtureCardProps> = ({ fixture, onClick, onEdit, isA
             <h3 className="font-semibold text-gray-900 text-sm">{fixture.away_team.name}</h3>
           </div>
           <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-    
+            {fixture.away_team.logo ? (
+              <img 
+                src={fixture.away_team.logo} 
+                alt={fixture.away_team.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
               <span className="text-gray-500 text-xs font-medium">
                 {(fixture.away_team.name ? fixture.away_team.name.substring(0, 2).toUpperCase() : '??')}
               </span>
-        
+            )}
           </div>
         </div>
       </div>

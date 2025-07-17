@@ -102,6 +102,7 @@ const SquadMemberModal: React.FC<SquadMemberModalProps> = ({
                     <option value="defender">Defender</option>
                     <option value="midfield">Midfielder</option>
                     <option value="attacker">Attacker</option>
+                    <option value="goalkeeper">Goalkeeper</option>
                   </>
                 )
               }
